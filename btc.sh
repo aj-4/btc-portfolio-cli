@@ -1,23 +1,7 @@
 #!/bin/bash
-
-# Check if -q flag is provided
-if ! [[ "$*" =~ "-q" ]]; then
-  echo "Error: Missing -q flag for quantity." >&2
-  exit 1
-fi
+source ./vars.sh
 
 # Parse arguments for quantity
-while getopts "q:" opt; do
-  case $opt in
-    q)
-      quantity="$OPTARG"
-      ;;
-    \?)
-      echo "Invalid option: -$OPTARG" >&2
-      exit 1
-      ;;
-  esac
-done
 
 # Get bitcoin chart data
 btc_data=$(bitcoin-chart-cli --toplist 1)
@@ -40,6 +24,9 @@ if [[ -n "$quantity" ]]; then
   prev_value=$(printf "%.2f" $(echo "$value / (1 + ($change_decimal))" | bc))
   increase=$(printf "%.2f" $(echo "$value - $prev_value" | bc))
 
+  cb_profit=$(printf "%.2f" $(echo "$value - ($cb * $quantity)" | bc))
+  cb_profit_formatted=$(printf "%'.0f" "$cb_profit")
+
   # Format the increase with a comma for thousands separator
   increase_formatted=$(printf "%'.0f" "$increase")
 
@@ -54,9 +41,15 @@ change_percent=$(echo "$btc_data" | sed -n 's/.* \([0-9\.]*%\)$/\1/p' | tr -d '%
 
 # Determine the color for the percentage change
 if [ -n "$change_percent" ] && [ $(echo "$change_percent < 0" | bc) -eq 1 ]; then
-    color="\e[31m"  # red
+    percent_color="\e[31m"  # red
 else
-    color="\e[32m"  # green
+    percent_color="\e[32m"  # green
+fi
+
+if [ -n "$cb_profit" ] && [ $(echo "$cb_profit < 0" | bc) -eq 1 ]; then
+    cb_color="\e[31m"  # red
+else
+    cb_color="\e[32m"  # green
 fi
 
   # Add a plus or minus symbol before the increase depending on its sign
@@ -67,9 +60,16 @@ fi
     increase_formatted="-\$$increase_formatted"
   fi
 
+  if [ $(echo "$cb_profit >= 0" | bc) -eq 1 ]; then
+    cb_profit_formatted="+\$$cb_profit_formatted"
+  else
+    cb_profit_formatted="-\$$cb_profit_formatted"
+  fi
+
 # Format and print the formatted, colorized result
 price_formatted=$(printf "%'.0f" "$price")
 value_formatted=$(printf "%'.0f" "$value")
+cb_formatted=$(printf "%'.0f" "$cb")
 
 printf "\e[33m\n\t──▄▄█▀▀▀▀▀█▄▄──
 \t▄█▀░░▄░▄░░░░▀█▄
@@ -80,7 +80,7 @@ printf "\e[33m\n\t──▄▄█▀▀▀▀▀█▄▄──
 \t──▀▀█▄▄▄▄▄█▀▀──\033[0m\n\n"
 
 
-printf "     Price:\e[0m \e[33m\$%s%s%s%%\e[0m\n" "$price_formatted" " " "$change_percent"
-printf "   Portfolio: ${color}\$%s %s\n" "$value_formatted" "$increase_formatted"
-
+printf "      ${percent_color}Price: \$%s%s%s%%\e[0m\n" "$price_formatted" " " "$change_percent"
+printf "   Portfolio: \$%s %s\n" "$value_formatted" "$increase_formatted" 
+printf "       CB: \$%s %s\n" "$cb_formatted" "$cb_profit_formatted"
 
