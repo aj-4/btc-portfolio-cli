@@ -72,7 +72,16 @@ price_formatted=$(printf "%'.0f" "$price")
 value_formatted=$(printf "%'.0f" "$value")
 increase_formatted=$(echo "$increase_formatted" | tr -d ',')
 
-printf "Current Price:\e[0m \e[33m\$%s\e[0m\n" "$price_formatted"
-printf "Total Value:\e[0m \e[33m\$%s\e[0m\n" "$value_formatted"
-printf "Change/24h: ${color}%s%% / %s\n" "$change_percent" "$increase_formatted" | sed "s/\([0-9]\)\([0-9]\{3\}\)/\1,\2/g"
+printf "\e[33m\n\t──▄▄█▀▀▀▀▀█▄▄──
+\t▄█▀░░▄░▄░░░░▀█▄
+\t█░░░▀█▀▀▀▀▄░░░█
+\t█░░░░█▄▄▄▄▀░░░█
+\t█░░░░█░░░░█░░░█
+\t▀█▄░▀▀█▀█▀░░▄█▀
+\t──▀▀█▄▄▄▄▄█▀▀──\033[0m\n\n"
+
+
+printf "    Price:\e[0m \e[33m\$%s%s%s%%\e[0m\n" "$price_formatted" " " "$change_percent"
+printf "   Portfolio: ${color}\$%s %s\n" "$value_formatted" "$increase_formatted"
+
 
