@@ -15,5 +15,5 @@ optional for auto-update
 
 then run
 ```sh
-    watch -n 60 sh btc.sh -q 2.2
+    watch -n 60 --color sh btc.sh -q 2.2
 ```
