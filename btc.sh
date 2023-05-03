@@ -1,7 +1,10 @@
 #!/bin/bash
 
-# Default quantity value
-quantity=1
+# Check if -q flag is provided
+if ! [[ "$*" =~ "-q" ]]; then
+  echo "Error: Missing -q flag for quantity." >&2
+  exit 1
+fi
 
 # Parse arguments for quantity
 while getopts "q:" opt; do
