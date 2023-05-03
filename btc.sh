@@ -23,7 +23,7 @@ btc_data=$(bitcoin-chart-cli --toplist 1)
 price=$(echo "$btc_data" | sed -n 's/.*\$\([0-9,\.]*\) .*/\1/p' | tr -d ',')
 
 # Multiply the price by the quantity
-value=$(echo "$price" | awk -v q="$quantity" '{ printf "%.2f", $1 * q }')
+value=$(echo "$price * $quantity" | bc)
 
 # Use sed to extract the percentage change
 change=$(echo "$btc_data" | sed -n 's/.* \([0-9\.]*%\)$/\1/p' | tr -d '%')
@@ -35,8 +35,11 @@ else
     color="\e[32m"  # green
 fi
 
-# Print the formatted, colorized result
-printf "\e[32mCurrent Price:\e[0m \e[33m\$%.2f\e[0m\n" "$price"
-printf "\e[32mTotal Value:\e[0m \e[33m\$%.2f\e[0m\n" "$value"
+# Format and print the formatted, colorized result
+price_formatted=$(printf "%'.0f" "$price")
+value_formatted=$(printf "%'.0f" "$value")
+
+printf "\e[32mCurrent Price:\e[0m \e[33m\$%s\e[0m\n" "$price_formatted"
+printf "\e[32mTotal Value:\e[0m \e[33m\$%s\e[0m\n" "$value_formatted"
 printf "${color}Change/24h: %s%%\e[0m\n" "$change"
 
