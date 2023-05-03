@@ -80,7 +80,7 @@ printf "\e[33m\n\t──▄▄█▀▀▀▀▀█▄▄──
 \t──▀▀█▄▄▄▄▄█▀▀──\033[0m\n\n"
 
 
-printf "    Price:\e[0m \e[33m\$%s%s%s%%\e[0m\n" "$price_formatted" " " "$change_percent"
+printf "     Price:\e[0m \e[33m\$%s%s%s%%\e[0m\n" "$price_formatted" " " "$change_percent"
 printf "   Portfolio: ${color}\$%s %s\n" "$value_formatted" "$increase_formatted"
 
 

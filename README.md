@@ -11,9 +11,11 @@ optional for auto-update
   brew install watch
 ```
 
--q flag is quantity of btc you have
 
 then run
 ```sh
-    watch -n 60 --color sh btc.sh -q 2.2
+    watch -t -n 60 --color sh btc.sh -q 2
 ```
+-t flag hides the header of "watch"
+-n flag asks "watch" to refresh every 60 seconds
+-q flag is quantity of btc you have. if you own 2 btc, put -q 2
