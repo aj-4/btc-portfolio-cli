@@ -70,7 +70,6 @@ fi
 # Format and print the formatted, colorized result
 price_formatted=$(printf "%'.0f" "$price")
 value_formatted=$(printf "%'.0f" "$value")
-increase_formatted=$(echo "$increase_formatted" | tr -d ',')
 
 printf "\e[33m\n\t──▄▄█▀▀▀▀▀█▄▄──
 \t▄█▀░░▄░▄░░░░▀█▄
