@@ -1,5 +1,5 @@
 #!/bin/bash
-source ./vars.sh
+source ~/btc-portfolio-cli/vars.sh
 
 # Parse arguments for quantity
 
@@ -79,8 +79,7 @@ printf "\e[33m\n\t──▄▄█▀▀▀▀▀█▄▄──
 \t▀█▄░▀▀█▀█▀░░▄█▀
 \t──▀▀█▄▄▄▄▄█▀▀──\033[0m\n\n"
 
-
-printf "      ${percent_color}Price: \$%s%s%s%%\e[0m\n" "$price_formatted" " " "$change_percent"
-printf "   Portfolio: \$%s %s\n" "$value_formatted" "$increase_formatted" 
-printf "       CB: \$%s %s\n" "$cb_formatted" "$cb_profit_formatted"
+printf "          \e[33mBTC | \$${price_formatted} \e[0m\n"
+printf "      ${percent_color}24h | %s%% | %s\e[0m\n" "$change_percent" "$increase_formatted"
+printf "     Bal | \$%s | %s\n" "$value_formatted" "$cb_profit_formatted"
 
